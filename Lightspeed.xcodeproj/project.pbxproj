@@ -13,6 +13,9 @@
 		0C3393C12C1DDE31001921B2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C3393C02C1DDE31001921B2 /* Preview Assets.xcassets */; };
 		0C3393CB2C1DDE32001921B2 /* LightspeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393CA2C1DDE32001921B2 /* LightspeedTests.swift */; };
 		0C3393E52C1DE58A001921B2 /* SpeedoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393E42C1DE58A001921B2 /* SpeedoManager.swift */; };
+		0C3393F02C1E1196001921B2 /* SpeedoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393EF2C1E1196001921B2 /* SpeedoView.swift */; };
+		0C3393F22C1E14A8001921B2 /* SpeedoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393F12C1E14A8001921B2 /* SpeedoViewModel.swift */; };
+		0C3393F52C1E2074001921B2 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393F42C1E2074001921B2 /* Strings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +37,9 @@
 		0C3393C62C1DDE32001921B2 /* LightspeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LightspeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C3393CA2C1DDE32001921B2 /* LightspeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightspeedTests.swift; sourceTree = "<group>"; };
 		0C3393E42C1DE58A001921B2 /* SpeedoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoManager.swift; sourceTree = "<group>"; };
+		0C3393EF2C1E1196001921B2 /* SpeedoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoView.swift; sourceTree = "<group>"; };
+		0C3393F12C1E14A8001921B2 /* SpeedoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoViewModel.swift; sourceTree = "<group>"; };
+		0C3393F42C1E2074001921B2 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +81,7 @@
 		0C3393B82C1DDE30001921B2 /* Lightspeed */ = {
 			isa = PBXGroup;
 			children = (
+				0C3393EE2C1E118D001921B2 /* Views */,
 				0C3393E32C1DE55B001921B2 /* Services */,
 				0C3393F32C1E2066001921B2 /* Resources */,
 				0C3393BB2C1DDE30001921B2 /* ContentView.swift */,
@@ -106,6 +113,15 @@
 				0C3393E42C1DE58A001921B2 /* SpeedoManager.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		0C3393EE2C1E118D001921B2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0C3393EF2C1E1196001921B2 /* SpeedoView.swift */,
+				0C3393F12C1E14A8001921B2 /* SpeedoViewModel.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		0C3393F32C1E2066001921B2 /* Resources */ = {
@@ -217,8 +233,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C3393F22C1E14A8001921B2 /* SpeedoViewModel.swift in Sources */,
 				0C3393BC2C1DDE30001921B2 /* ContentView.swift in Sources */,
 				0C3393BA2C1DDE30001921B2 /* LightspeedApp.swift in Sources */,
+				0C3393F02C1E1196001921B2 /* SpeedoView.swift in Sources */,
+				0C3393F52C1E2074001921B2 /* Strings.swift in Sources */,
 				0C3393E52C1DE58A001921B2 /* SpeedoManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
