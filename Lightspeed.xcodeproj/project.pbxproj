@@ -76,9 +76,9 @@
 			isa = PBXGroup;
 			children = (
 				0C3393E32C1DE55B001921B2 /* Services */,
+				0C3393F32C1E2066001921B2 /* Resources */,
 				0C3393BB2C1DDE30001921B2 /* ContentView.swift */,
 				0C3393B92C1DDE30001921B2 /* LightspeedApp.swift */,
-				0C3393BD2C1DDE31001921B2 /* Assets.xcassets */,
 				0C3393BF2C1DDE31001921B2 /* Preview Content */,
 			);
 			path = Lightspeed;
@@ -106,6 +106,15 @@
 				0C3393E42C1DE58A001921B2 /* SpeedoManager.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		0C3393F32C1E2066001921B2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0C3393BD2C1DDE31001921B2 /* Assets.xcassets */,
+				0C3393F42C1E2074001921B2 /* Strings.swift */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
