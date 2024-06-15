@@ -18,12 +18,28 @@ import SwiftUI
 
 class SpeedoManagerImpl: SpeedoManager, ObservableObject {
     
+    static let shared = SpeedoManagerImpl()
+    
     private let manager: CLLocationManager
+    private var background: CLBackgroundActivitySession?
 
     @Published var speed: Speed?
     var speedPublisher: Published<CLLocationSpeed?>.Publisher { $speed }
     
     @Published var isStationary = false
+    
+    @Published
+    var updatesStarted: Bool = UserDefaults.standard.bool(forKey: "liveUpdatesStarted") {
+        didSet { UserDefaults.standard.set(updatesStarted, forKey: "liveUpdatesStarted") }
+    }
+    
+    @Published
+    var backgroundActivity: Bool = UserDefaults.standard.bool(forKey: "BGActivitySessionStarted") {
+        didSet {
+            backgroundActivity ? self.background = CLBackgroundActivitySession() : self.background?.invalidate()
+            UserDefaults.standard.set(backgroundActivity, forKey: "BGActivitySessionStarted")
+        }
+    }
     
     private var count = 0
     private var shouldProcessUpdates: Bool = false

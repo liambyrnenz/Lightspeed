@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         SpeedoView(
             viewModel: SpeedoViewModel(
-                speedoManager: SpeedoManagerImpl()
+                speedoManager: SpeedoManagerImpl.shared
             )
         )
     }
