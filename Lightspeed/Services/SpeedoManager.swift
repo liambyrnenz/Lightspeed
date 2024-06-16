@@ -36,20 +36,20 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
     }
 
     func beginUpdates() {
-        if self.manager.authorizationStatus == .notDetermined {
-            self.manager.requestWhenInUseAuthorization()
+        if manager.authorizationStatus == .notDetermined {
+            manager.requestWhenInUseAuthorization()
         }
         print("Starting location updates")
         Task {
             do {
-                self.shouldProcessUpdates = true
+                shouldProcessUpdates = true
                 let updates = CLLocationUpdate.liveUpdates()
                 for try await update in updates {
-                    if !self.shouldProcessUpdates { break }
+                    if !shouldProcessUpdates { break }
                     if let location = update.location {
-                        self.speed = location.speed
-                        self.count += 1
-                        print("Speed \(self.count): \(self.speed ?? 0)")
+                        speed = location.speed
+                        count += 1
+                        print("Speed \(count): \(speed ?? 0)")
                     }
                 }
             } catch {
@@ -61,7 +61,7 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
 
     func endUpdates() {
         print("Stopping location updates")
-        self.shouldProcessUpdates = false
+        shouldProcessUpdates = false
     }
 }
 

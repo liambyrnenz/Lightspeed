@@ -20,6 +20,17 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
         }
     }
     
+    func handleScenePhaseChange(_ newPhase: ScenePhase) {
+        switch newPhase {
+        case .active, .inactive:
+            viewModel.start()
+        case .background:
+            viewModel.stop()
+        @unknown default:
+            break
+        }
+    }
+    
     var body: some View {
         VStack {
             SpeedoDialView(info: .init(
@@ -33,14 +44,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
                 .bold()
         }
         .onChange(of: scenePhase) { _, newPhase in
-            switch newPhase {
-            case .active, .inactive:
-                viewModel.start()
-            case .background:
-                viewModel.stop()
-            @unknown default:
-                break
-            }
+            handleScenePhaseChange(newPhase)
         }
     }
 }
