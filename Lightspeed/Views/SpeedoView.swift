@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct SpeedoView: View {
-    @StateObject var viewModel: SpeedoViewModel
+struct SpeedoView<ViewModel: SpeedoViewModel>: View {
+    @StateObject var viewModel: ViewModel
     
     var body: some View {
         Text(viewModel.displaySpeed)
@@ -20,8 +20,12 @@ struct SpeedoView: View {
 
 #Preview {
     SpeedoView(
-        viewModel: SpeedoViewModel(
-            speedoManager: SpeedoManagerPreviewMock()
+        viewModel: SpeedoViewModelPreviewMock(
+            displaySpeed: Strings.Speedo.kmhFormatted(
+                Double.random(
+                    in: 0...100
+                )
+            )
         )
     )
 }

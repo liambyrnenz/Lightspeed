@@ -10,8 +10,10 @@ import SwiftUI
 
 @MainActor protocol SpeedoManager {
     typealias Speed = CLLocationSpeed
+    typealias SpeedPublisher = Published<Speed?>.Publisher
     
-    var speedPublisher: Published<SpeedoManager.Speed?>.Publisher { get }
+    var speedPublisher: SpeedPublisher { get }
+    
     func beginUpdates()
     func endUpdates()
 }
@@ -21,7 +23,7 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
     private let manager: CLLocationManager
 
     @Published var speed: Speed?
-    var speedPublisher: Published<CLLocationSpeed?>.Publisher { $speed }
+    var speedPublisher: SpeedPublisher { $speed }
     
     @Published var isStationary = false
     
@@ -65,7 +67,7 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
 
 class SpeedoManagerPreviewMock: SpeedoManager {
     @Published var speed: Speed?
-    var speedPublisher: Published<CLLocationSpeed?>.Publisher { $speed }
+    var speedPublisher: SpeedPublisher { $speed }
     func beginUpdates() {}
     func endUpdates() {}
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         SpeedoView(
-            viewModel: SpeedoViewModel(
+            viewModel: SpeedoViewModelImpl(
                 speedoManager: SpeedoManagerImpl()
             )
         )

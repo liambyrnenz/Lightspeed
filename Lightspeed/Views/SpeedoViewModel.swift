@@ -7,7 +7,14 @@
 
 import SwiftUI
 
-@MainActor class SpeedoViewModel: ObservableObject {
+@MainActor protocol SpeedoViewModel: ObservableObject {
+    var displaySpeed: String { get }
+    
+    func start()
+    func stop()
+}
+
+class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
     
     @Published var displaySpeed: String = Strings.Speedo.unableToDetermine
     
@@ -31,9 +38,20 @@ import SwiftUI
     }
     
     func stop() {
-        
+        speedoManager.endUpdates()
     }
     
+}
+
+class SpeedoViewModelPreviewMock: SpeedoViewModel {
+    var displaySpeed: String
+    
+    init(displaySpeed: String) {
+        self.displaySpeed = displaySpeed
+    }
+    
+    func start() {}
+    func stop() {}
 }
 
 extension SpeedoManager.Speed {
