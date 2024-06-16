@@ -13,6 +13,7 @@ import SwiftUI
     typealias SpeedPublisher = Published<Speed?>.Publisher
     
     var speedPublisher: SpeedPublisher { get }
+    var isRunning: Bool { get }
     
     func beginUpdates()
     func endUpdates()
@@ -29,6 +30,8 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
     
     private var count = 0
     private var shouldProcessUpdates: Bool = false
+    
+    var isRunning: Bool { shouldProcessUpdates }
 
     init() {
         self.manager = CLLocationManager()
@@ -68,6 +71,7 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
 class SpeedoManagerPreviewMock: SpeedoManager {
     @Published var speed: Speed?
     var speedPublisher: SpeedPublisher { $speed }
+    var isRunning: Bool = false
     func beginUpdates() {}
     func endUpdates() {}
 }

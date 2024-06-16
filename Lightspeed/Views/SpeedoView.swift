@@ -8,14 +8,23 @@
 import SwiftUI
 
 struct SpeedoView<ViewModel: SpeedoViewModel>: View {
+    @Environment(\.scenePhase) var scenePhase
+    
     @StateObject var viewModel: ViewModel
     
     var body: some View {
         Text(viewModel.displaySpeed)
             .font(.largeTitle)
             .bold()
-            .onAppear {
-                viewModel.start()
+            .onChange(of: scenePhase) { _, newPhase in
+                switch newPhase {
+                case .active, .inactive:
+                    viewModel.start()
+                case .background:
+                    viewModel.stop()
+                @unknown default:
+                    break
+                }
             }
     }
 }

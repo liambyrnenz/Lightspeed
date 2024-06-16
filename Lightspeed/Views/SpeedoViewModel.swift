@@ -25,6 +25,10 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
     }
     
     func start() {
+        if speedoManager.isRunning {
+            return
+        }
+        
         speedoManager.beginUpdates()
         speedoManager.speedPublisher
             .map(formatSpeed(_:))
