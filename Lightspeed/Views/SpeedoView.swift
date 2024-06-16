@@ -12,6 +12,8 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
     
     var body: some View {
         Text(viewModel.displaySpeed)
+            .font(.largeTitle)
+            .bold()
             .onAppear {
                 viewModel.start()
             }
@@ -21,9 +23,9 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
 #Preview {
     SpeedoView(
         viewModel: SpeedoViewModelPreviewMock(
-            displaySpeed: Strings.Speedo.kmhFormatted(
-                Double.random(
-                    in: 0...100
+            displaySpeed: SpeedFormatter.formatFrom(
+                metersPerSecond: Double.random(
+                    in: 1...27
                 )
             )
         )

@@ -27,18 +27,20 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
     func start() {
         speedoManager.beginUpdates()
         speedoManager.speedPublisher
-            .map { speed in
-                if let speed {
-                    Strings.Speedo.kmhFormatted(speed.toKmh())
-                } else {
-                    Strings.Speedo.unableToDetermine
-                }
-            }
+            .map(formatSpeed(_:))
             .assign(to: &$displaySpeed)
     }
     
     func stop() {
         speedoManager.endUpdates()
+    }
+    
+    private func formatSpeed(_ speed: Double?) -> String {
+        if let speed, speed >= 0 {
+            SpeedFormatter.formatFrom(metersPerSecond: speed)
+        } else {
+            Strings.Speedo.unableToDetermine
+        }
     }
     
 }
@@ -54,11 +56,12 @@ class SpeedoViewModelPreviewMock: SpeedoViewModel {
     func stop() {}
 }
 
-extension SpeedoManager.Speed {
+enum SpeedFormatter {
     
-    func toKmh() -> Self {
-        let kmSec = self / 1_000
-        return kmSec * (60 * 60)
+    static func formatFrom(metersPerSecond: Double) -> String {
+        Measurement<UnitSpeed>(value: metersPerSecond, unit: .metersPerSecond)
+            .converted(to: UnitSpeed(forLocale: Locale.current))
+            .formatted()
     }
     
 }
