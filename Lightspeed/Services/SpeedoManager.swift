@@ -26,8 +26,6 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
     @Published var speed: Speed?
     var speedPublisher: SpeedPublisher { $speed }
     
-    @Published var isStationary = false
-    
     private var count = 0
     private var shouldProcessUpdates: Bool = false
     
@@ -50,7 +48,6 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
                     if !self.shouldProcessUpdates { break }
                     if let location = update.location {
                         self.speed = location.speed
-                        self.isStationary = update.isStationary
                         self.count += 1
                         print("Speed \(self.count): \(self.speed ?? 0)")
                     }
