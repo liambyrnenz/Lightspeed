@@ -8,11 +8,15 @@
 import CoreLocation
 import SwiftUI
 
+struct SpeedData {
+    let currentSpeed: CLLocationSpeed?
+    let maximumSpeed: CLLocationSpeed?
+}
+
 @MainActor protocol SpeedoManager {
-    typealias Speed = CLLocationSpeed
-    typealias SpeedPublisher = Published<Speed?>.Publisher
+    typealias SpeedDataPublisher = Published<SpeedData?>.Publisher
     
-    var speedPublisher: SpeedPublisher { get }
+    var speedDataPublisher: SpeedDataPublisher { get }
     var isRunning: Bool { get }
     
     func beginUpdates()
@@ -23,8 +27,10 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
     
     private let manager: CLLocationManager
 
-    @Published var speed: Speed?
-    var speedPublisher: SpeedPublisher { $speed }
+    @Published var speedData: SpeedData?
+    var speedDataPublisher: SpeedDataPublisher { $speedData }
+    
+    private var maximumSpeed: CLLocationSpeed?
     
     private var count = 0
     private var shouldProcessUpdates: Bool = false
@@ -47,9 +53,13 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
                 for try await update in updates {
                     if !shouldProcessUpdates { break }
                     if let location = update.location {
-                        speed = location.speed
+                        maximumSpeed = max(maximumSpeed ?? 0, location.speed)
+                        speedData = SpeedData(
+                            currentSpeed: location.speed,
+                            maximumSpeed: maximumSpeed
+                        )
                         count += 1
-                        print("Speed \(count): \(speed ?? 0)")
+                        print("Speed \(count): \(speedData?.currentSpeed ?? 0)")
                     }
                 }
             } catch {
@@ -63,11 +73,12 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
         print("Stopping location updates")
         shouldProcessUpdates = false
     }
+    
 }
 
 class SpeedoManagerPreviewMock: SpeedoManager {
-    @Published var speed: Speed?
-    var speedPublisher: SpeedPublisher { $speed }
+    @Published var speedData: SpeedData?
+    var speedDataPublisher: SpeedDataPublisher { $speedData }
     var isRunning: Bool = false
     func beginUpdates() {}
     func endUpdates() {}

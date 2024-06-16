@@ -35,7 +35,8 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
         VStack {
             SpeedoDialView(info: .init(
                 size: 150,
-                progress: viewModel.dialProgress
+                progress: viewModel.dialProgress,
+                maximumSpeed: viewModel.maximumSpeed
             ))
             Spacer()
                 .frame(height: 16)
@@ -50,8 +51,9 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
 }
 
 #Preview {
+    let maxMetersPerSecond: Double = 27 // 100 km/h
     let randomMetersPerSecond = Double.random(
-        in: 1...27 // 0-100 km/h
+        in: 1...maxMetersPerSecond
     )
     
     return SpeedoView(
@@ -59,7 +61,8 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
             displaySpeed: SpeedFormatter.formatFrom(
                 metersPerSecond: randomMetersPerSecond
             ),
-            dialProgress: randomMetersPerSecond / 27
+            dialProgress: randomMetersPerSecond / maxMetersPerSecond,
+            maximumSpeed: maxMetersPerSecond
         )
     )
 }

@@ -10,6 +10,7 @@ import SwiftUI
 @MainActor protocol SpeedoViewModel: ObservableObject {
     var displaySpeed: String { get }
     var dialProgress: Double { get }
+    var maximumSpeed: Double { get }
     
     func start()
     func stop()
@@ -17,8 +18,13 @@ import SwiftUI
 
 class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
     
+    enum Constants {
+        static let initialMaximumSpeed: Double = 50 // in m/sec == 180 km/h
+    }
+    
     @Published var displaySpeed: String = Strings.Speedo.unableToDetermine
     @Published var dialProgress: Double = 0
+    @Published var maximumSpeed: Double = Constants.initialMaximumSpeed
     
     private let speedoManager: SpeedoManager
     
@@ -32,16 +38,23 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
         }
         
         speedoManager.beginUpdates()
-        let sharedSpeedPublisher = speedoManager.speedPublisher.share()
-        sharedSpeedPublisher
-            .map(formatSpeed(_:))
+        let sharedPublisher = speedoManager.speedDataPublisher.share()
+        sharedPublisher
+            .map { speedData in
+                self.formatSpeed(speedData?.currentSpeed)
+            }
             .assign(to: &$displaySpeed)
-        sharedSpeedPublisher
-            .map { speed in
-                let progress = ((speed ?? 0) / 89) // 320 km/h
+        sharedPublisher
+            .map { speedData in
+                let progress = ((speedData?.currentSpeed ?? 0) / self.maximumSpeed)
                 return min(max(0, progress), 1)
             }
             .assign(to: &$dialProgress)
+        sharedPublisher
+            .map { speedData in
+                max(speedData?.maximumSpeed ?? 0, self.maximumSpeed)
+            }
+            .assign(to: &$maximumSpeed)
     }
     
     func stop() {
@@ -61,10 +74,12 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
 class SpeedoViewModelPreviewMock: SpeedoViewModel {
     var displaySpeed: String
     var dialProgress: Double
+    var maximumSpeed: Double
     
-    init(displaySpeed: String, dialProgress: Double) {
+    init(displaySpeed: String, dialProgress: Double, maximumSpeed: Double) {
         self.displaySpeed = displaySpeed
         self.dialProgress = dialProgress
+        self.maximumSpeed = maximumSpeed
     }
     
     func start() {}

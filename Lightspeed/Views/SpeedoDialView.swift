@@ -11,6 +11,7 @@ struct SpeedoDialView: View {
     struct Info {
         let size: CGFloat
         let progress: Double
+        let maximumSpeed: Double
     }
     
     var info: Info
@@ -35,6 +36,9 @@ struct SpeedoDialView: View {
             Circle()
                 .fill(.gray)
                 .frame(width: needleFulcrumSize, height: needleFulcrumSize)
+            Text(SpeedFormatter.formatFrom(metersPerSecond: info.maximumSpeed))
+                .font(.system(size: info.size / 15))
+                .offset(x: (info.size / 2) - 4, y: (info.size / 2) - 4)
         }
         .frame(width: info.size, height: info.size)
     }
@@ -44,7 +48,8 @@ struct SpeedoDialView: View {
     SpeedoDialView(
         info: .init(
             size: 300,
-            progress: 0
+            progress: 0.33,
+            maximumSpeed: 27
         )
     )
 }
