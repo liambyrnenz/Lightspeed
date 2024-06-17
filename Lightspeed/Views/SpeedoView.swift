@@ -7,13 +7,21 @@
 
 import SwiftUI
 
+struct SpeedoViewInfo {
+    var displaySpeed: String
+    var dialProgress: Double
+    var maximumSpeed: Double
+}
+
 struct SpeedoView<ViewModel: SpeedoViewModel>: View {
+    
     @Environment(\.scenePhase) var scenePhase
     
     @StateObject var viewModel: ViewModel
+    var info: SpeedoViewInfo { viewModel.info }
     
     var displaySpeedFont: Font {
-        if viewModel.displaySpeed == Strings.Speedo.unableToDetermine {
+        if info.displaySpeed == Strings.Speedo.unableToDetermine {
             .title3
         } else {
             .largeTitle
@@ -35,12 +43,12 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
         VStack {
             SpeedoDialView(info: .init(
                 size: 150,
-                progress: viewModel.dialProgress,
-                maximumSpeed: viewModel.maximumSpeed
+                progress: info.dialProgress,
+                maximumSpeed: info.maximumSpeed
             ))
             Spacer()
                 .frame(height: 16)
-            Text(viewModel.displaySpeed)
+            Text(info.displaySpeed)
                 .font(displaySpeedFont)
                 .bold()
         }
@@ -57,12 +65,12 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
     )
     
     return SpeedoView(
-        viewModel: SpeedoViewModelPreviewMock(
+        viewModel: SpeedoViewModelPreviewMock(info: .init(
             displaySpeed: SpeedFormatter.formatFrom(
                 metersPerSecond: randomMetersPerSecond
             ),
             dialProgress: randomMetersPerSecond / maxMetersPerSecond,
             maximumSpeed: maxMetersPerSecond
-        )
+        ))
     )
 }

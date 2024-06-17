@@ -8,9 +8,7 @@
 import SwiftUI
 
 @MainActor protocol SpeedoViewModel: ObservableObject {
-    var displaySpeed: String { get }
-    var dialProgress: Double { get }
-    var maximumSpeed: Double { get }
+    var info: SpeedoViewInfo { get }
     
     func start()
     func stop()
@@ -22,9 +20,11 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
         static let initialMaximumSpeed: Double = 50 // in m/sec == 180 km/h
     }
     
-    @Published var displaySpeed: String = Strings.Speedo.unableToDetermine
-    @Published var dialProgress: Double = 0
-    @Published var maximumSpeed: Double = Constants.initialMaximumSpeed
+    @Published var info = SpeedoViewInfo(
+        displaySpeed: Strings.Speedo.unableToDetermine,
+        dialProgress: 0,
+        maximumSpeed: Constants.initialMaximumSpeed
+    )
     
     private let speedoManager: SpeedoManager
     
@@ -38,23 +38,19 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
         }
         
         speedoManager.beginUpdates()
-        let sharedPublisher = speedoManager.speedDataPublisher.share()
-        sharedPublisher
+        speedoManager.speedDataPublisher
             .map { speedData in
-                self.formatSpeed(speedData?.currentSpeed)
+                let displaySpeed = self.formatSpeed(speedData?.currentSpeed)
+                let dialProportion = ((speedData?.currentSpeed ?? 0) / self.info.maximumSpeed)
+                let dialProgress = min(max(0, dialProportion), 1)
+                let maximumSpeed = max(speedData?.maximumSpeed ?? 0, self.info.maximumSpeed)
+                return .init(
+                    displaySpeed: displaySpeed,
+                    dialProgress: dialProgress,
+                    maximumSpeed: maximumSpeed
+                )
             }
-            .assign(to: &$displaySpeed)
-        sharedPublisher
-            .map { speedData in
-                let progress = ((speedData?.currentSpeed ?? 0) / self.maximumSpeed)
-                return min(max(0, progress), 1)
-            }
-            .assign(to: &$dialProgress)
-        sharedPublisher
-            .map { speedData in
-                max(speedData?.maximumSpeed ?? 0, self.maximumSpeed)
-            }
-            .assign(to: &$maximumSpeed)
+            .assign(to: &$info)
     }
     
     func stop() {
@@ -72,14 +68,10 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
 }
 
 class SpeedoViewModelPreviewMock: SpeedoViewModel {
-    var displaySpeed: String
-    var dialProgress: Double
-    var maximumSpeed: Double
+    var info: SpeedoViewInfo
     
-    init(displaySpeed: String, dialProgress: Double, maximumSpeed: Double) {
-        self.displaySpeed = displaySpeed
-        self.dialProgress = dialProgress
-        self.maximumSpeed = maximumSpeed
+    init(info: SpeedoViewInfo) {
+        self.info = info
     }
     
     func start() {}

@@ -7,14 +7,15 @@
 
 import SwiftUI
 
+struct SpeedoDialViewInfo {
+    let size: CGFloat
+    let progress: Double
+    let maximumSpeed: Double
+}
+
 struct SpeedoDialView: View {
-    struct Info {
-        let size: CGFloat
-        let progress: Double
-        let maximumSpeed: Double
-    }
     
-    var info: Info
+    var info: SpeedoDialViewInfo
     
     var dialProgressDegrees: Double {
         let minimumDegrees: Double = -45
