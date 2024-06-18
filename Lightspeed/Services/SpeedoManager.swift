@@ -5,6 +5,7 @@
 //  Created by Liam on 15/06/2024.
 //
 
+import Combine
 import CoreLocation
 import SwiftUI
 
@@ -14,7 +15,7 @@ struct SpeedData {
 }
 
 @MainActor protocol SpeedoManager {
-    typealias SpeedDataPublisher = Published<SpeedData?>.Publisher
+    typealias SpeedDataPublisher = AnyPublisher<SpeedData?, Never>
     
     var speedDataPublisher: SpeedDataPublisher { get }
     var isRunning: Bool { get }
@@ -28,7 +29,7 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
     private let manager: CLLocationManager
 
     @Published var speedData: SpeedData?
-    var speedDataPublisher: SpeedDataPublisher { $speedData }
+    var speedDataPublisher: SpeedDataPublisher { $speedData.eraseToAnyPublisher() }
     
     private var maximumSpeed: CLLocationSpeed?
     
@@ -74,13 +75,5 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
         shouldProcessUpdates = false
     }
     
-}
-
-class SpeedoManagerPreviewMock: SpeedoManager {
-    @Published var speedData: SpeedData?
-    var speedDataPublisher: SpeedDataPublisher { $speedData }
-    var isRunning: Bool = false
-    func beginUpdates() {}
-    func endUpdates() {}
 }
 

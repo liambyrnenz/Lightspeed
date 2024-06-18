@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SpeedoViewInfo {
+struct SpeedoViewInfo: Equatable {
     var displaySpeed: String
     var dialProgress: Double
     var maximumSpeed: Double

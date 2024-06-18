@@ -1,0 +1,28 @@
+{
+  "configurations" : [
+    {
+      "id" : "B9192A9C-1F59-4A3B-AF81-4A7C863110B4",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Lightspeed.xcodeproj",
+      "identifier" : "0C3393B52C1DDE30001921B2",
+      "name" : "Lightspeed"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Lightspeed.xcodeproj",
+        "identifier" : "0C3393C52C1DDE32001921B2",
+        "name" : "LightspeedTests"
+      }
+    }
+  ],
+  "version" : 1
+}

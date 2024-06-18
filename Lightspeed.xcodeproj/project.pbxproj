@@ -7,16 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C3313622C23500E00CDACF4 /* XCTestCase+AwaitPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3313612C23500E00CDACF4 /* XCTestCase+AwaitPublisher.swift */; };
 		0C3393BA2C1DDE30001921B2 /* LightspeedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393B92C1DDE30001921B2 /* LightspeedApp.swift */; };
 		0C3393BC2C1DDE30001921B2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393BB2C1DDE30001921B2 /* ContentView.swift */; };
 		0C3393BE2C1DDE31001921B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C3393BD2C1DDE31001921B2 /* Assets.xcassets */; };
 		0C3393C12C1DDE31001921B2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C3393C02C1DDE31001921B2 /* Preview Assets.xcassets */; };
-		0C3393CB2C1DDE32001921B2 /* LightspeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393CA2C1DDE32001921B2 /* LightspeedTests.swift */; };
+		0C3393CB2C1DDE32001921B2 /* SpeedoViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393CA2C1DDE32001921B2 /* SpeedoViewModelTests.swift */; };
 		0C3393E52C1DE58A001921B2 /* SpeedoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393E42C1DE58A001921B2 /* SpeedoManager.swift */; };
 		0C3393F02C1E1196001921B2 /* SpeedoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393EF2C1E1196001921B2 /* SpeedoView.swift */; };
 		0C3393F22C1E14A8001921B2 /* SpeedoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393F12C1E14A8001921B2 /* SpeedoViewModel.swift */; };
 		0C3393F52C1E2074001921B2 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3393F42C1E2074001921B2 /* Strings.swift */; };
 		0C6D896D2C1F2F5400BA15B1 /* SpeedoDialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6D896C2C1F2F5400BA15B1 /* SpeedoDialView.swift */; };
+		0CF507872C22164F00062F02 /* SpeedoManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF507862C22164F00062F02 /* SpeedoManagerMock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,18 +32,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C3313612C23500E00CDACF4 /* XCTestCase+AwaitPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+AwaitPublisher.swift"; sourceTree = "<group>"; };
 		0C3393B62C1DDE30001921B2 /* Lightspeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lightspeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C3393B92C1DDE30001921B2 /* LightspeedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightspeedApp.swift; sourceTree = "<group>"; };
 		0C3393BB2C1DDE30001921B2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0C3393BD2C1DDE31001921B2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C3393C02C1DDE31001921B2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0C3393C62C1DDE32001921B2 /* LightspeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LightspeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0C3393CA2C1DDE32001921B2 /* LightspeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightspeedTests.swift; sourceTree = "<group>"; };
+		0C3393CA2C1DDE32001921B2 /* SpeedoViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoViewModelTests.swift; sourceTree = "<group>"; };
 		0C3393E42C1DE58A001921B2 /* SpeedoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoManager.swift; sourceTree = "<group>"; };
 		0C3393EF2C1E1196001921B2 /* SpeedoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoView.swift; sourceTree = "<group>"; };
 		0C3393F12C1E14A8001921B2 /* SpeedoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoViewModel.swift; sourceTree = "<group>"; };
 		0C3393F42C1E2074001921B2 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		0C6D896C2C1F2F5400BA15B1 /* SpeedoDialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoDialView.swift; sourceTree = "<group>"; };
+		0CC318DD2C234D670007CF89 /* Lightspeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lightspeed.xctestplan; sourceTree = "<group>"; };
+		0CF507862C22164F00062F02 /* SpeedoManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedoManagerMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +67,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C3313602C234FF500CDACF4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0C3313612C23500E00CDACF4 /* XCTestCase+AwaitPublisher.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		0C3393AD2C1DDE30001921B2 = {
 			isa = PBXGroup;
 			children = (
@@ -104,7 +117,10 @@
 		0C3393C92C1DDE32001921B2 /* LightspeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				0C3393CA2C1DDE32001921B2 /* LightspeedTests.swift */,
+				0CF507852C22164300062F02 /* Mocks */,
+				0C3313602C234FF500CDACF4 /* Extensions */,
+				0C3393CA2C1DDE32001921B2 /* SpeedoViewModelTests.swift */,
+				0CC318DD2C234D670007CF89 /* Lightspeed.xctestplan */,
 			);
 			path = LightspeedTests;
 			sourceTree = "<group>";
@@ -134,6 +150,14 @@
 				0C3393F42C1E2074001921B2 /* Strings.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		0CF507852C22164300062F02 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				0CF507862C22164F00062F02 /* SpeedoManagerMock.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,7 +274,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C3393CB2C1DDE32001921B2 /* LightspeedTests.swift in Sources */,
+				0C3393CB2C1DDE32001921B2 /* SpeedoViewModelTests.swift in Sources */,
+				0CF507872C22164F00062F02 /* SpeedoManagerMock.swift in Sources */,
+				0C3313622C23500E00CDACF4 /* XCTestCase+AwaitPublisher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
