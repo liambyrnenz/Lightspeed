@@ -49,6 +49,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
             Spacer()
                 .frame(height: 16)
             Text(info.displaySpeed)
+                .frame(minHeight: 48)
                 .font(displaySpeedFont)
                 .bold()
         }
