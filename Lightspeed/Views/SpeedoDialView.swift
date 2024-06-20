@@ -37,7 +37,7 @@ struct SpeedoDialView: View {
             Circle()
                 .fill(.gray)
                 .frame(width: needleFulcrumSize, height: needleFulcrumSize)
-            Text(SpeedFormatter.formatFrom(metersPerSecond: info.maximumSpeed))
+            Text(SpeedFormatter().formatFrom(metersPerSecond: info.maximumSpeed))
                 .font(.system(size: info.size / 15))
                 .offset(x: (info.size / 2) - 4, y: (info.size / 2) - 4)
         }

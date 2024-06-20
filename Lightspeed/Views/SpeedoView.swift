@@ -67,7 +67,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
     
     return SpeedoView(
         viewModel: SpeedoViewModelPreviewMock(info: .init(
-            displaySpeed: SpeedFormatter.formatFrom(
+            displaySpeed: SpeedFormatter().formatFrom(
                 metersPerSecond: randomMetersPerSecond
             ),
             dialProgress: randomMetersPerSecond / maxMetersPerSecond,

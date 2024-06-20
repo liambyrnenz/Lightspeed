@@ -20,16 +20,23 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
         static let initialMaximumSpeed: Double = 50 // in m/sec == 180 km/h
     }
     
-    @Published var info = SpeedoViewInfo(
-        displaySpeed: Strings.Speedo.unableToDetermine,
-        dialProgress: 0,
-        maximumSpeed: Constants.initialMaximumSpeed
-    )
+    @Published var info: SpeedoViewInfo
     
     private let speedoManager: SpeedoManager
+    private let speedFormatter: SpeedFormatter
     
-    init(speedoManager: SpeedoManager) {
+    init(
+        speedoManager: SpeedoManager,
+        speedFormatter: SpeedFormatter = .init(),
+        initialMaximumSpeed: Double = Constants.initialMaximumSpeed
+    ) {
         self.speedoManager = speedoManager
+        self.speedFormatter = speedFormatter
+        self.info = SpeedoViewInfo(
+            displaySpeed: Strings.Speedo.unableToDetermine,
+            dialProgress: 0,
+            maximumSpeed: Constants.initialMaximumSpeed
+        )
     }
     
     func start() {
@@ -59,7 +66,7 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
     
     private func formatSpeed(_ speed: Double?) -> String {
         if let speed, speed >= 0 {
-            SpeedFormatter.formatFrom(metersPerSecond: speed)
+            speedFormatter.formatFrom(metersPerSecond: speed)
         } else {
             Strings.Speedo.unableToDetermine
         }
@@ -78,12 +85,14 @@ class SpeedoViewModelPreviewMock: SpeedoViewModel {
     func stop() {}
 }
 
-enum SpeedFormatter {
+struct SpeedFormatter {
     
-    static func formatFrom(metersPerSecond: Double) -> String {
+    var locale = Locale.current
+    
+    func formatFrom(metersPerSecond: Double) -> String {
         Measurement<UnitSpeed>(value: metersPerSecond, unit: .metersPerSecond)
-            .converted(to: UnitSpeed(forLocale: Locale.current))
-            .formatted()
+            .converted(to: UnitSpeed(forLocale: locale))
+            .formatted(.measurement(width: .abbreviated).locale(locale))
     }
     
 }
