@@ -60,13 +60,13 @@ final class SpeedoViewModelTests: XCTestCase {
 
         XCTAssertTrue(speedoManager.beginUpdatesCalled)
         XCTAssertEqual(values, [
-            .init(displaySpeed: "Unable to determine speed", dialProgress: 0.0, maximumSpeed: 50.0), // initial value
-            .init(displaySpeed: "Unable to determine speed", dialProgress: 0.0, maximumSpeed: 50.0), // nil
-            .init(displaySpeed: "36 km/h", dialProgress: 0.2, maximumSpeed: 50.0),
-            .init(displaySpeed: "72 km/h", dialProgress: 0.4, maximumSpeed: 50.0),
-            .init(displaySpeed: "144 km/h", dialProgress: 0.8, maximumSpeed: 50.0),
-            .init(displaySpeed: "216 km/h", dialProgress: 1, maximumSpeed: 60.0),
-            .init(displaySpeed: "162 km/h", dialProgress: 0.75, maximumSpeed: 60.0)
+            .init(displaySpeed: .message("Unable to determine speed"), dialProgress: 0.0, maximumSpeed: 50.0), // initial value
+            .init(displaySpeed: .message("Unable to determine speed"), dialProgress: 0.0, maximumSpeed: 50.0), // nil
+            .init(displaySpeed: .formattedSpeed("36 km/h"), dialProgress: 0.2, maximumSpeed: 50.0),
+            .init(displaySpeed: .formattedSpeed("72 km/h"), dialProgress: 0.4, maximumSpeed: 50.0),
+            .init(displaySpeed: .formattedSpeed("144 km/h"), dialProgress: 0.8, maximumSpeed: 50.0),
+            .init(displaySpeed: .formattedSpeed("216 km/h"), dialProgress: 1, maximumSpeed: 60.0),
+            .init(displaySpeed: .formattedSpeed("162 km/h"), dialProgress: 0.75, maximumSpeed: 60.0)
         ])
     }
 
@@ -84,7 +84,7 @@ final class SpeedoViewModelTests: XCTestCase {
         speedoManager.publish(data: MockData.standardSequence)
 
         XCTAssertTrue(speedoManager.beginUpdatesCalled)
-        XCTAssertEqual(values.map(\.displaySpeed), [
+        XCTAssertEqual(values.map(\.displaySpeed.text), [
             "Unable to determine speed", // initial value
             "Unable to determine speed", // nil
             "22 mph",

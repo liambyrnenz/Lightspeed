@@ -8,7 +8,21 @@
 import SwiftUI
 
 struct SpeedoViewInfo: Equatable {
-    var displaySpeed: String
+    enum DisplaySpeedType: Equatable {
+        case formattedSpeed(String)
+        case message(String)
+
+        var text: String {
+            switch self {
+            case .formattedSpeed(let string):
+                return string
+            case .message(let string):
+                return string
+            }
+        }
+    }
+
+    var displaySpeed: DisplaySpeedType
     var dialProgress: Double
     var maximumSpeed: Double
 }
@@ -21,7 +35,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
     var info: SpeedoViewInfo { viewModel.info }
 
     var displaySpeedFont: Font {
-        if info.displaySpeed == Strings.Speedo.unableToDetermine {
+        if case .message(_) = info.displaySpeed {
             .title3
         } else {
             .largeTitle
@@ -48,7 +62,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
             ))
             Spacer()
                 .frame(height: 16)
-            Text(info.displaySpeed)
+            Text(info.displaySpeed.text)
                 .frame(minHeight: 48)
                 .font(displaySpeedFont)
                 .bold()
@@ -67,8 +81,10 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
 
     return SpeedoView(
         viewModel: SpeedoViewModelPreviewMock(info: .init(
-            displaySpeed: SpeedFormatter().formatFrom(
-                metersPerSecond: randomMetersPerSecond
+            displaySpeed: .formattedSpeed(
+                SpeedFormatter().formatFrom(
+                    metersPerSecond: randomMetersPerSecond
+                )
             ),
             dialProgress: randomMetersPerSecond / maxMetersPerSecond,
             maximumSpeed: maxMetersPerSecond

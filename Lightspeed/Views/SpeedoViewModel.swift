@@ -33,7 +33,7 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
         self.speedoManager = speedoManager
         self.speedFormatter = speedFormatter
         self.info = SpeedoViewInfo(
-            displaySpeed: Strings.Speedo.unableToDetermine,
+            displaySpeed: .message(Strings.Speedo.unableToDetermine),
             dialProgress: 0,
             maximumSpeed: Constants.initialMaximumSpeed
         )
@@ -64,11 +64,11 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
         speedoManager.endUpdates()
     }
 
-    private func formatSpeed(_ speed: Double?) -> String {
+    private func formatSpeed(_ speed: Double?) -> SpeedoViewInfo.DisplaySpeedType {
         if let speed, speed >= 0 {
-            speedFormatter.formatFrom(metersPerSecond: speed)
+            .formattedSpeed(speedFormatter.formatFrom(metersPerSecond: speed))
         } else {
-            Strings.Speedo.unableToDetermine
+            .message(Strings.Speedo.unableToDetermine)
         }
     }
 
