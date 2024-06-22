@@ -33,7 +33,7 @@ struct SpeedoDialView: View {
                 .frame(width: info.size / 2, height: needleSize)
                 .offset(x: -(info.size / 4))
                 .rotationEffect(.degrees(dialProgressDegrees))
-                .animation(.interpolatingSpring, value: dialProgressDegrees)
+                .animation(.easeInOut(duration: 1), value: dialProgressDegrees)
             Circle()
                 .fill(.gray)
                 .frame(width: needleFulcrumSize, height: needleFulcrumSize)
