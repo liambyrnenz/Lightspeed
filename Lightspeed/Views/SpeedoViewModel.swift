@@ -40,28 +40,26 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
     }
 
     func start() {
-        if speedoManager.isRunning {
-            return
-        }
-
-        speedoManager.beginUpdates()
-        speedoManager.speedDataPublisher
-            .map { speedData in
-                let displaySpeed = self.formatSpeed(speedData?.currentSpeed)
-                let dialProportion = ((speedData?.currentSpeed ?? 0) / self.info.maximumSpeed)
+        Task {
+            for try await speedData in speedoManager.speedDataSequence {
+                guard let speedData = speedData as? SpeedData else {
+                    return
+                }
+                let displaySpeed = self.formatSpeed(speedData.currentSpeed)
+                let dialProportion = ((speedData.currentSpeed ?? 0) / self.info.maximumSpeed)
                 let dialProgress = min(max(0, dialProportion), 1)
-                let maximumSpeed = max(speedData?.maximumSpeed ?? 0, self.info.maximumSpeed)
-                return .init(
+                let maximumSpeed = max(speedData.maximumSpeed ?? 0, self.info.maximumSpeed)
+                info = .init(
                     displaySpeed: displaySpeed,
                     dialProgress: dialProgress,
                     maximumSpeed: maximumSpeed
                 )
             }
-            .assign(to: &$info)
+        }
     }
-
+    
     func stop() {
-        speedoManager.endUpdates()
+        //        speedoManager.endUpdates()
     }
 
     private func formatSpeed(_ speed: Double?) -> String {
