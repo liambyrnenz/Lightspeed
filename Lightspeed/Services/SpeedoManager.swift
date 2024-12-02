@@ -5,7 +5,6 @@
 //  Created by Liam on 15/06/2024.
 //
 
-import Combine
 import CoreLocation
 import SwiftUI
 
@@ -15,22 +14,13 @@ struct SpeedData {
 }
 
 @MainActor protocol SpeedoManager {
-    typealias SpeedDataPublisher = AnyPublisher<SpeedData?, Never>
-    
-    var speedDataPublisher: SpeedDataPublisher { get }
-    var isRunning: Bool { get }
-    
-    func beginUpdates()
-    func endUpdates()
+    var speedDataSequence: any AsyncSequence { get }
 }
 
 class SpeedoManagerImpl: SpeedoManager, ObservableObject {
     
     private let manager: CLLocationManager
 
-    @Published var speedData: SpeedData?
-    var speedDataPublisher: SpeedDataPublisher { $speedData.eraseToAnyPublisher() }
-    
     private var maximumSpeed: CLLocationSpeed?
     
     private var count = 0
@@ -42,31 +32,21 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
         self.manager = CLLocationManager()
     }
 
-    func beginUpdates() {
+    var speedDataSequence: any AsyncSequence {
         if manager.authorizationStatus == .notDetermined {
             manager.requestWhenInUseAuthorization()
         }
         print("Starting location updates")
-        Task {
-            do {
-                shouldProcessUpdates = true
-                let updates = CLLocationUpdate.liveUpdates()
-                for try await update in updates {
-                    if !shouldProcessUpdates { break }
-                    if let location = update.location {
-                        maximumSpeed = max(maximumSpeed ?? 0, location.speed)
-                        speedData = SpeedData(
-                            currentSpeed: location.speed,
-                            maximumSpeed: maximumSpeed
-                        )
-                        count += 1
-                        print("Speed \(count): \(speedData?.currentSpeed ?? 0)")
-                    }
-                }
-            } catch {
-                print("Could not start location updates")
-            }
-            return
+        return CLLocationUpdate.liveUpdates().map { @MainActor [weak self] update -> SpeedData? in
+            guard let self, let location = update.location else { return nil }
+            maximumSpeed = max(maximumSpeed ?? 0, location.speed)
+            let speedData = SpeedData(
+                currentSpeed: location.speed,
+                maximumSpeed: maximumSpeed
+            )
+            count += 1
+            print("Speed \(count): \(speedData.currentSpeed ?? 0)")
+            return speedData
         }
     }
 
