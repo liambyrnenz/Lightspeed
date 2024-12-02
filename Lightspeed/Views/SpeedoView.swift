@@ -17,7 +17,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
 
     @Environment(\.scenePhase) var scenePhase
 
-    @StateObject var viewModel: ViewModel
+    var viewModel: ViewModel
     var info: SpeedoViewInfo { viewModel.info }
 
     var displaySpeedFont: Font {
@@ -31,7 +31,9 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
     func handleScenePhaseChange(_ newPhase: ScenePhase) {
         switch newPhase {
         case .active, .inactive:
-            viewModel.start()
+            Task {
+                await viewModel.start()
+            }
         case .background:
             viewModel.stop()
         @unknown default:
