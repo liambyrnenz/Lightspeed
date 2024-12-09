@@ -10,7 +10,7 @@ import Combine
 import XCTest
 
 final class SpeedoViewModelTests: XCTestCase {
-    
+
     enum MockData {
         static let standardSequence: [SpeedData?] = [ // remember that raw speed data is in m/s
             nil,
@@ -21,15 +21,15 @@ final class SpeedoViewModelTests: XCTestCase {
             SpeedData(currentSpeed: 45.0, maximumSpeed: 60.0)
         ]
     }
-    
+
     var speedoManager: SpeedoManagerMock!
     var cancellables: [AnyCancellable] = []
-    
+
     @MainActor override func setUp() {
         super.setUp()
         speedoManager = SpeedoManagerMock()
     }
-    
+
     @MainActor override func tearDown() {
         cancellables.forEach { $0.cancel() }
     }
@@ -44,20 +44,20 @@ final class SpeedoViewModelTests: XCTestCase {
             initialMaximumSpeed: initialMaximumSpeed
         )
     }
-    
+
     // MARK: - Tests
-    
+
     @MainActor func testMapDataToInfo() throws {
         let sut = buildSUT()
-        
+
         var values: [SpeedoViewInfo] = []
         sut.$info
             .sink { values.append($0) }
             .store(in: &cancellables)
-        
+
         sut.start()
         speedoManager.publish(data: MockData.standardSequence)
-        
+
         XCTAssertTrue(speedoManager.beginUpdatesCalled)
         XCTAssertEqual(values, [
             .init(displaySpeed: "Unable to determine speed", dialProgress: 0.0, maximumSpeed: 50.0), // initial value
@@ -69,20 +69,20 @@ final class SpeedoViewModelTests: XCTestCase {
             .init(displaySpeed: "162 km/h", dialProgress: 0.75, maximumSpeed: 60.0)
         ])
     }
-    
+
     @MainActor func testMapDataToInfo_LocalisedFormatting() throws {
         let sut = buildSUT(
             speedFormatter: SpeedFormatter(locale: Locale(identifier: "en_GB"))
         )
-        
+
         var values: [SpeedoViewInfo] = []
         sut.$info
             .sink { values.append($0) }
             .store(in: &cancellables)
-        
+
         sut.start()
         speedoManager.publish(data: MockData.standardSequence)
-        
+
         XCTAssertTrue(speedoManager.beginUpdatesCalled)
         XCTAssertEqual(values.map(\.displaySpeed), [
             "Unable to determine speed", // initial value
@@ -94,7 +94,7 @@ final class SpeedoViewModelTests: XCTestCase {
             "101 mph"
         ])
     }
-    
+
     @MainActor func testStartWhileRunning() {
         speedoManager.underlyingIsRunning = true
         let sut = buildSUT()

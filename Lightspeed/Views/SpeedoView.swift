@@ -14,12 +14,12 @@ struct SpeedoViewInfo: Equatable {
 }
 
 struct SpeedoView<ViewModel: SpeedoViewModel>: View {
-    
+
     @Environment(\.scenePhase) var scenePhase
-    
+
     @StateObject var viewModel: ViewModel
     var info: SpeedoViewInfo { viewModel.info }
-    
+
     var displaySpeedFont: Font {
         if info.displaySpeed == Strings.Speedo.unableToDetermine {
             .title3
@@ -27,7 +27,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
             .largeTitle
         }
     }
-    
+
     func handleScenePhaseChange(_ newPhase: ScenePhase) {
         switch newPhase {
         case .active, .inactive:
@@ -38,7 +38,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
             break
         }
     }
-    
+
     var body: some View {
         VStack {
             SpeedoDialView(info: .init(
@@ -64,7 +64,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
     let randomMetersPerSecond = Double.random(
         in: 1...maxMetersPerSecond
     )
-    
+
     return SpeedoView(
         viewModel: SpeedoViewModelPreviewMock(info: .init(
             displaySpeed: SpeedFormatter().formatFrom(

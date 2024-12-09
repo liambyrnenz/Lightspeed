@@ -9,7 +9,7 @@ import Combine
 import XCTest
 
 extension XCTestCase {
-    
+
     func awaitPublisher<T: Publisher>(
         _ publisher: T,
         timeout: TimeInterval = 10,
@@ -34,7 +34,7 @@ extension XCTestCase {
                 result = .success(value)
             }
         )
-        
+
         waitForExpectations(timeout: timeout)
         cancellable.cancel()
 
@@ -47,5 +47,5 @@ extension XCTestCase {
 
         return try unwrappedResult.get()
     }
-    
+
 }

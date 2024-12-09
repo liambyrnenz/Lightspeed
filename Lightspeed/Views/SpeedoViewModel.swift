@@ -9,22 +9,22 @@ import SwiftUI
 
 @MainActor protocol SpeedoViewModel: ObservableObject {
     var info: SpeedoViewInfo { get }
-    
+
     func start()
     func stop()
 }
 
 class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
-    
+
     enum Constants {
         static let initialMaximumSpeed: Double = 50 // in m/sec == 180 km/h
     }
-    
+
     @Published var info: SpeedoViewInfo
-    
+
     private let speedoManager: SpeedoManager
     private let speedFormatter: SpeedFormatter
-    
+
     init(
         speedoManager: SpeedoManager,
         speedFormatter: SpeedFormatter = .init(),
@@ -38,12 +38,12 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
             maximumSpeed: Constants.initialMaximumSpeed
         )
     }
-    
+
     func start() {
         if speedoManager.isRunning {
             return
         }
-        
+
         speedoManager.beginUpdates()
         speedoManager.speedDataPublisher
             .map { speedData in
@@ -59,11 +59,11 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
             }
             .assign(to: &$info)
     }
-    
+
     func stop() {
         speedoManager.endUpdates()
     }
-    
+
     private func formatSpeed(_ speed: Double?) -> String {
         if let speed, speed >= 0 {
             speedFormatter.formatFrom(metersPerSecond: speed)
@@ -71,28 +71,28 @@ class SpeedoViewModelImpl: SpeedoViewModel, ObservableObject {
             Strings.Speedo.unableToDetermine
         }
     }
-    
+
 }
 
 class SpeedoViewModelPreviewMock: SpeedoViewModel {
     var info: SpeedoViewInfo
-    
+
     init(info: SpeedoViewInfo) {
         self.info = info
     }
-    
+
     func start() {}
     func stop() {}
 }
 
 struct SpeedFormatter {
-    
+
     var locale = Locale.current
-    
+
     func formatFrom(metersPerSecond: Double) -> String {
         Measurement<UnitSpeed>(value: metersPerSecond, unit: .metersPerSecond)
             .converted(to: UnitSpeed(forLocale: locale))
             .formatted(.measurement(width: .abbreviated).locale(locale))
     }
-    
+
 }

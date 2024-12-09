@@ -14,9 +14,9 @@ struct SpeedoDialViewInfo {
 }
 
 struct SpeedoDialView: View {
-    
+
     var info: SpeedoDialViewInfo
-    
+
     var dialProgressDegrees: Double {
         let minimumDegrees: Double = -45
         let maximumDegrees: Double = 225
@@ -24,7 +24,7 @@ struct SpeedoDialView: View {
     }
     var needleSize: CGFloat { 0.02 * info.size }
     var needleFulcrumSize: CGFloat { 0.08 * info.size }
-    
+
     var body: some View {
         ZStack {
             Circle()

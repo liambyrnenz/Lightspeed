@@ -16,26 +16,26 @@ struct SpeedData {
 
 @MainActor protocol SpeedoManager {
     typealias SpeedDataPublisher = AnyPublisher<SpeedData?, Never>
-    
+
     var speedDataPublisher: SpeedDataPublisher { get }
     var isRunning: Bool { get }
-    
+
     func beginUpdates()
     func endUpdates()
 }
 
 class SpeedoManagerImpl: SpeedoManager, ObservableObject {
-    
+
     private let manager: CLLocationManager
 
     @Published var speedData: SpeedData?
     var speedDataPublisher: SpeedDataPublisher { $speedData.eraseToAnyPublisher() }
-    
+
     private var maximumSpeed: CLLocationSpeed?
-    
+
     private var count = 0
     private var shouldProcessUpdates: Bool = false
-    
+
     var isRunning: Bool { shouldProcessUpdates }
 
     init() {
@@ -74,6 +74,6 @@ class SpeedoManagerImpl: SpeedoManager, ObservableObject {
         print("Stopping location updates")
         shouldProcessUpdates = false
     }
-    
+
 }
 
