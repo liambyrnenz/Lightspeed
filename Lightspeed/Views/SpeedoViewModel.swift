@@ -24,7 +24,7 @@ protocol SpeedoViewModel {
     private let speedFormatter: SpeedFormatter
 
     private(set) var info: SpeedoViewInfo
-    private var isRunning: Bool = false
+    private(set) var isRunning: Bool = false
 
     init(
         speedoManager: SpeedoManager,

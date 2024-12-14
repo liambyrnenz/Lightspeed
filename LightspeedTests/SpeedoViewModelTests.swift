@@ -5,13 +5,15 @@
 //  Created by Liam on 15/06/2024.
 //
 
+import Foundation
 @testable import Lightspeed
+import Testing
 import XCTest
 
-final class SpeedoViewModelTests: XCTestCase {
+final class SpeedoViewModelTests {
 
     enum MockData {
-        static let standardSequence: [SpeedData?] = [ // remember that raw speed data is in m/s
+        static let standardSequence: [SpeedData] = [ // remember that raw speed data is in m/s
             SpeedData(currentSpeed: 10.0, maximumSpeed: 10.0),
             SpeedData(currentSpeed: 20.0, maximumSpeed: 20.0),
             SpeedData(currentSpeed: nil, maximumSpeed: 20.0),
@@ -21,12 +23,11 @@ final class SpeedoViewModelTests: XCTestCase {
         ]
     }
 
-    var speedoManager: SpeedoManagerMock!
+    var speedoManagerMock: SpeedoManagerMock!
     var infoCollector: ObservationCollector<SpeedoViewInfo>!
 
-    override func setUp() {
-        super.setUp()
-        speedoManager = SpeedoManagerMock()
+    init() {
+        speedoManagerMock = SpeedoManagerMock()
         infoCollector = ObservationCollector()
     }
 
@@ -35,7 +36,7 @@ final class SpeedoViewModelTests: XCTestCase {
         initialMaximumSpeed: Double = SpeedoViewModelImpl.Constants.initialMaximumSpeed
     ) -> SpeedoViewModelImpl {
         SpeedoViewModelImpl(
-            speedoManager: speedoManager,
+            speedoManager: speedoManagerMock,
             speedFormatter: speedFormatter,
             initialMaximumSpeed: initialMaximumSpeed
         )
@@ -43,20 +44,21 @@ final class SpeedoViewModelTests: XCTestCase {
 
     // MARK: - Tests
 
-    func testMapDataToInfo() async {
+    @Test
+    func mapDataToInfo() async {
         let mockData = MockData.standardSequence
         let sut = buildSUT()
 
-        let expectation = expectation(description: "SpeedoViewInfo values should be populated")
+        let expectation = XCTestExpectation(description: "SpeedoViewInfo values should be populated")
         infoCollector.runObservation(on: sut.info, expectation: expectation, valuesExpectedCount: mockData.count)
 
-        speedoManager.publish(data: mockData)
+        speedoManagerMock.load(data: mockData)
         await sut.start()
 
-        await fulfillment(of: [expectation], timeout: 5)
+        _ = await XCTWaiter.fulfillment(of: [expectation], timeout: 5)
 
-//        XCTAssertTrue(speedoManager.beginUpdatesCalled)
-        XCTAssertEqual(infoCollector.values, [
+        #expect(sut.isRunning)
+        #expect(infoCollector.values == [
             .init(displaySpeed: "Unable to determine speed", dialProgress: 0.0, maximumSpeed: 50.0), // initial value
             .init(displaySpeed: "36 km/h", dialProgress: 0.2, maximumSpeed: 50.0),
             .init(displaySpeed: "72 km/h", dialProgress: 0.4, maximumSpeed: 50.0),
@@ -67,22 +69,23 @@ final class SpeedoViewModelTests: XCTestCase {
         ])
     }
 
-    func testMapDataToInfo_LocalisedFormatting() async {
+    @Test
+    func mapDataToInfo_LocalisedFormatting() async {
         let mockData = MockData.standardSequence
         let sut = buildSUT(
             speedFormatter: SpeedFormatter(locale: Locale(identifier: "en_GB"))
         )
 
-        let expectation = expectation(description: "SpeedoViewInfo values should be populated")
+        let expectation = XCTestExpectation(description: "SpeedoViewInfo values should be populated")
         infoCollector.runObservation(on: sut.info, expectation: expectation, valuesExpectedCount: mockData.count)
 
-        speedoManager.publish(data: mockData)
+        speedoManagerMock.load(data: mockData)
         await sut.start()
 
-        await fulfillment(of: [expectation], timeout: 5)
+        _ = await XCTWaiter.fulfillment(of: [expectation], timeout: 5)
 
-//        XCTAssertTrue(speedoManager.beginUpdatesCalled)
-        XCTAssertEqual(infoCollector.values.map(\.displaySpeed), [
+        #expect(sut.isRunning)
+        #expect(infoCollector.values.map(\.displaySpeed) == [
             "Unable to determine speed", // initial value
             "22 mph",
             "45 mph",
@@ -92,12 +95,5 @@ final class SpeedoViewModelTests: XCTestCase {
             "101 mph"
         ])
     }
-
-//    func testStartWhileRunning() {
-//        speedoManager.underlyingIsRunning = true
-//        let sut = buildSUT()
-//        sut.start()
-//        XCTAssertFalse(speedoManager.beginUpdatesCalled)
-//    }
 
 }

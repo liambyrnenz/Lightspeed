@@ -12,8 +12,8 @@ class SpeedoManagerMock: SpeedoManager {
 
     var speedDataSequence: any AsyncSequence = AsyncStream<SpeedData?>(unfolding: { nil })
 
-    func publish(data: [SpeedData?]) {
-        speedDataSequence = AsyncStream<SpeedData?> { continuation in
+    func load(data: [SpeedData]) {
+        speedDataSequence = AsyncStream<SpeedData> { continuation in
             for datum in data {
                 continuation.yield(datum)
             }
