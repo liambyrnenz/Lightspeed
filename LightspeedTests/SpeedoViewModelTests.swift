@@ -9,7 +9,7 @@ import Foundation
 @testable import Lightspeed
 import Testing
 
-final class SpeedoViewModelTests {
+struct SpeedoViewModelTests {
 
     enum MockData {
         static let standardSequence: [SpeedData] = [ // remember that raw speed data is in m/s
@@ -22,8 +22,8 @@ final class SpeedoViewModelTests {
         ]
     }
 
-    var speedoManagerMock: SpeedoManagerMock!
-    var infoCollector: ObservationCollector<SpeedoViewInfo>!
+    let speedoManagerMock: SpeedoManagerMock!
+    let infoCollector: ObservationCollector<SpeedoViewInfo>!
 
     init() {
         speedoManagerMock = SpeedoManagerMock()
@@ -95,6 +95,28 @@ final class SpeedoViewModelTests {
             "134 mph",
             "101 mph"
         ])
+    }
+
+    @Test
+    func stop() async {
+        let mockData = [SpeedData](repeating: .init(currentSpeed: 0.0, maximumSpeed: 50.0), count: 1000)
+        let sut = buildSUT()
+
+        let task = Task {
+            await infoCollector.run(on: sut.info, valuesExpectedCount: mockData.count)
+        }
+
+        speedoManagerMock.load(data: mockData)
+        await sut.start()
+
+        #expect(sut.isRunning)
+
+        sut.stop()
+
+        let values = await task.value
+
+        #expect(sut.isRunning == false)
+        #expect(values.count != mockData.count)
     }
 
 }
