@@ -8,7 +8,6 @@
 import Foundation
 @testable import Lightspeed
 import Testing
-import XCTest
 
 final class SpeedoViewModelTests {
 
@@ -49,16 +48,17 @@ final class SpeedoViewModelTests {
         let mockData = MockData.standardSequence
         let sut = buildSUT()
 
-        let expectation = XCTestExpectation(description: "SpeedoViewInfo values should be populated")
-        infoCollector.runObservation(on: sut.info, expectation: expectation, valuesExpectedCount: mockData.count)
+        let task = Task {
+            await infoCollector.run(on: sut.info, valuesExpectedCount: mockData.count)
+        }
 
         speedoManagerMock.load(data: mockData)
         await sut.start()
 
-        _ = await XCTWaiter.fulfillment(of: [expectation], timeout: 5)
+        let values = await task.value
 
         #expect(sut.isRunning)
-        #expect(infoCollector.values == [
+        #expect(values == [
             .init(displaySpeed: "Unable to determine speed", dialProgress: 0.0, maximumSpeed: 50.0), // initial value
             .init(displaySpeed: "36 km/h", dialProgress: 0.2, maximumSpeed: 50.0),
             .init(displaySpeed: "72 km/h", dialProgress: 0.4, maximumSpeed: 50.0),
@@ -76,16 +76,17 @@ final class SpeedoViewModelTests {
             speedFormatter: SpeedFormatter(locale: Locale(identifier: "en_GB"))
         )
 
-        let expectation = XCTestExpectation(description: "SpeedoViewInfo values should be populated")
-        infoCollector.runObservation(on: sut.info, expectation: expectation, valuesExpectedCount: mockData.count)
+        let task = Task {
+            await infoCollector.run(on: sut.info, valuesExpectedCount: mockData.count)
+        }
 
         speedoManagerMock.load(data: mockData)
         await sut.start()
 
-        _ = await XCTWaiter.fulfillment(of: [expectation], timeout: 5)
+        let values = await task.value
 
         #expect(sut.isRunning)
-        #expect(infoCollector.values.map(\.displaySpeed) == [
+        #expect(values.map(\.displaySpeed) == [
             "Unable to determine speed", // initial value
             "22 mph",
             "45 mph",

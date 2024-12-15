@@ -5,18 +5,21 @@
 //  Created by Liam on 15/12/2024.
 //
 
-import XCTest
+import Foundation
 
 /// An object that can observe a value and collect an expected number of updates to it.
 class ObservationCollector<T> {
 
-    private(set) var values: [T]
+    private var values: [T] = []
 
-    init() {
-        self.values = []
+    func run(on value: @autoclosure @escaping () -> T, valuesExpectedCount: Int) async -> [T] {
+        await withCheckedContinuation { continuation in
+            run(on: value(), valuesExpectedCount: valuesExpectedCount, continuation: continuation)
+        }
+        return values
     }
 
-    func runObservation(on value: @autoclosure @escaping () -> T, expectation: XCTestExpectation, valuesExpectedCount: Int) {
+    private func run(on value: @autoclosure @escaping () -> T, valuesExpectedCount: Int, continuation: CheckedContinuation<Void, Never>) {
         _ = withObservationTracking(value, onChange: { [weak self] in
             guard let self else { return }
             // This only ever fires once per registration on some value, so upon a change, we need to set up a new registration
@@ -29,11 +32,12 @@ class ObservationCollector<T> {
                 // have updated in `value` by the time the work item below executes.)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.values.append(value())
-                    expectation.fulfill()
+                    continuation.resume()
                 }
             }
-            runObservation(on: value(), expectation: expectation, valuesExpectedCount: valuesExpectedCount)
+            run(on: value(), valuesExpectedCount: valuesExpectedCount, continuation: continuation)
         })
     }
+
 
 }
