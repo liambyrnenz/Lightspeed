@@ -30,7 +30,8 @@ class ObservationCollector<T> {
                 // The value captured here from `value` is the current, not new, value (i.e. willSet semantics.)
                 // When we reach the amount of expected values, wait a moment and then save the last value (which will
                 // have updated in `value` by the time the work item below executes.)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                Task {
+                    try? await Task.sleep(for: .seconds(0.1))
                     self.values.append(value())
                     continuation.resume()
                 }
