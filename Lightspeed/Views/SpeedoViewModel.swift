@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 protocol SpeedoViewModel {
     var info: SpeedoViewInfo { get }
 
@@ -14,7 +15,8 @@ protocol SpeedoViewModel {
     func stop()
 }
 
-@Observable class SpeedoViewModelImpl: SpeedoViewModel {
+@Observable
+class SpeedoViewModelImpl: SpeedoViewModel {
 
     enum Constants {
         static let initialMaximumSpeed: Double = 50 // in m/sec == 180 km/h

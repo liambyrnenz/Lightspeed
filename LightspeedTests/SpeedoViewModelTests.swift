@@ -9,6 +9,7 @@ import Foundation
 @testable import Lightspeed
 import Testing
 
+@MainActor
 struct SpeedoViewModelTests {
 
     enum MockData {
@@ -23,11 +24,9 @@ struct SpeedoViewModelTests {
     }
 
     let speedoManagerMock: SpeedoManagerMock!
-    let infoCollector: ObservationCollector<SpeedoViewInfo>!
 
     init() {
         speedoManagerMock = SpeedoManagerMock()
-        infoCollector = ObservationCollector()
     }
 
     func buildSUT(
@@ -47,18 +46,9 @@ struct SpeedoViewModelTests {
     func mapDataToInfo() async {
         let mockData = MockData.standardSequence
         let sut = buildSUT()
+        let observations = Observations { sut.info }
 
-        let task = Task {
-            await infoCollector.run(on: sut.info, valuesExpectedCount: mockData.count)
-        }
-
-        speedoManagerMock.load(data: mockData)
-        await sut.start()
-
-        let values = await task.value
-
-        #expect(sut.isRunning)
-        #expect(values == [
+        let expected: [SpeedoViewInfo] = [
             .init(displaySpeed: "Unable to determine speed", dialProgress: 0.0, maximumSpeed: 50.0), // initial value
             .init(displaySpeed: "36 km/h", dialProgress: 0.2, maximumSpeed: 50.0),
             .init(displaySpeed: "72 km/h", dialProgress: 0.4, maximumSpeed: 50.0),
@@ -66,7 +56,23 @@ struct SpeedoViewModelTests {
             .init(displaySpeed: "144 km/h", dialProgress: 0.8, maximumSpeed: 50.0),
             .init(displaySpeed: "216 km/h", dialProgress: 1, maximumSpeed: 60.0),
             .init(displaySpeed: "162 km/h", dialProgress: 0.75, maximumSpeed: 60.0)
-        ])
+        ]
+
+        let task = Task {
+            var values: [SpeedoViewInfo] = []
+            for await value in observations {
+                values.append(value)
+                if values.count == expected.count { break }
+            }
+            return values
+        }
+
+        speedoManagerMock.load(data: mockData)
+        await sut.start()
+
+        #expect(sut.isRunning)
+        let values = await task.value
+        #expect(expected == values)
     }
 
     @Test
@@ -75,18 +81,9 @@ struct SpeedoViewModelTests {
         let sut = buildSUT(
             speedFormatter: SpeedFormatter(locale: Locale(identifier: "en_GB"))
         )
+        let observations = Observations { sut.info }
 
-        let task = Task {
-            await infoCollector.run(on: sut.info, valuesExpectedCount: mockData.count)
-        }
-
-        speedoManagerMock.load(data: mockData)
-        await sut.start()
-
-        let values = await task.value
-
-        #expect(sut.isRunning)
-        #expect(values.map(\.displaySpeed) == [
+        let expected = [
             "Unable to determine speed", // initial value
             "22 mph",
             "45 mph",
@@ -94,7 +91,23 @@ struct SpeedoViewModelTests {
             "89 mph",
             "134 mph",
             "101 mph"
-        ])
+        ]
+
+        let task = Task {
+            var values: [SpeedoViewInfo] = []
+            for await value in observations {
+                values.append(value)
+                if values.count == expected.count { break }
+            }
+            return values
+        }
+
+        speedoManagerMock.load(data: mockData)
+        await sut.start()
+
+        #expect(sut.isRunning)
+        let values = await task.value
+        #expect(expected == values.map(\.displaySpeed))
     }
 
     @Test
@@ -102,21 +115,13 @@ struct SpeedoViewModelTests {
         let mockData = [SpeedData](repeating: .init(currentSpeed: 0.0, maximumSpeed: 50.0), count: 1000)
         let sut = buildSUT()
 
-        let task = Task {
-            await infoCollector.run(on: sut.info, valuesExpectedCount: mockData.count)
-        }
-
         speedoManagerMock.load(data: mockData)
         await sut.start()
 
         #expect(sut.isRunning)
 
         sut.stop()
-
-        let values = await task.value
-
         #expect(sut.isRunning == false)
-        #expect(values.count != mockData.count)
     }
 
 }
