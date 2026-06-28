@@ -37,6 +37,7 @@ class SpeedoViewModelImpl: SpeedoViewModel {
         self.speedFormatter = speedFormatter
         self.info = SpeedoViewInfo(
             displaySpeed: Strings.Speedo.unableToDetermine,
+            displaySpeedValue: 0,
             dialProgress: 0,
             maximumSpeed: Constants.initialMaximumSpeed
         )
@@ -52,15 +53,18 @@ class SpeedoViewModelImpl: SpeedoViewModel {
                 guard let speedData = speedData as? SpeedData else {
                     continue
                 }
-                let displaySpeed = self.formatSpeed(speedData.currentSpeed)
+                let speed = self.formatSpeed(speedData.currentSpeed)
                 let dialProportion = ((speedData.currentSpeed ?? 0) / self.info.maximumSpeed)
                 let dialProgress = min(max(0, dialProportion), 1)
                 let maximumSpeed = max(speedData.maximumSpeed ?? 0, self.info.maximumSpeed)
-                info = .init(
-                    displaySpeed: displaySpeed,
-                    dialProgress: dialProgress,
-                    maximumSpeed: maximumSpeed
-                )
+                withAnimation {
+                    info = .init(
+                        displaySpeed: speed.display,
+                        displaySpeedValue: speed.value,
+                        dialProgress: dialProgress,
+                        maximumSpeed: maximumSpeed
+                    )
+                }
             }
         } catch {
             
@@ -71,11 +75,11 @@ class SpeedoViewModelImpl: SpeedoViewModel {
         isRunning = false
     }
 
-    private func formatSpeed(_ speed: Double?) -> String {
+    private func formatSpeed(_ speed: Double?) -> SpeedFormatter.Output {
         if let speed, speed >= 0 {
             speedFormatter.formatFrom(metersPerSecond: speed)
         } else {
-            Strings.Speedo.unableToDetermine
+            .init(value: 0, display: Strings.Speedo.unableToDetermine)
         }
     }
 
@@ -93,13 +97,19 @@ class SpeedoViewModelPreviewMock: SpeedoViewModel {
 }
 
 struct SpeedFormatter {
+    struct Output {
+        let value: Double
+        let display: String
+    }
 
     var locale = Locale.current
 
-    func formatFrom(metersPerSecond: Double) -> String {
-        Measurement<UnitSpeed>(value: metersPerSecond, unit: .metersPerSecond)
+    func formatFrom(metersPerSecond: Double) -> Output {
+        let converted = Measurement<UnitSpeed>(value: metersPerSecond, unit: .metersPerSecond)
             .converted(to: UnitSpeed(forLocale: locale))
-            .formatted(.measurement(width: .abbreviated).locale(locale))
+        return .init(
+            value: converted.value,
+            display: converted.formatted(.measurement(width: .abbreviated).locale(locale))
+        )
     }
-
 }

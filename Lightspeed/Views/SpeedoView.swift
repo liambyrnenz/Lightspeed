@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SpeedoViewInfo: Equatable {
     var displaySpeed: String
+    var displaySpeedValue: Double
     var dialProgress: Double
     var maximumSpeed: Double
 }
@@ -54,6 +55,7 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
                 .frame(minHeight: 48)
                 .font(displaySpeedFont)
                 .bold()
+                .contentTransition(.numericText(value: info.displaySpeedValue))
         }
         .onChange(of: scenePhase) { _, newPhase in
             handleScenePhaseChange(newPhase)
@@ -66,12 +68,14 @@ struct SpeedoView<ViewModel: SpeedoViewModel>: View {
     let randomMetersPerSecond = Double.random(
         in: 1...maxMetersPerSecond
     )
+    let speed = SpeedFormatter().formatFrom(
+        metersPerSecond: randomMetersPerSecond
+    )
 
     return SpeedoView(
         viewModel: SpeedoViewModelPreviewMock(info: .init(
-            displaySpeed: SpeedFormatter().formatFrom(
-                metersPerSecond: randomMetersPerSecond
-            ),
+            displaySpeed: speed.display,
+            displaySpeedValue: speed.value,
             dialProgress: randomMetersPerSecond / maxMetersPerSecond,
             maximumSpeed: maxMetersPerSecond
         ))
